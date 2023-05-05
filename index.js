@@ -24,9 +24,52 @@ const persons = [
     }
 ]
 
+//get all entries
 app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
+
+//get any entry
+app.get('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const person = persons.find(person => id === person.id)
+  if(!person) {
+    res.status(404).end('entry not found')
+  }
+  else {
+    res.json(person)
+  }
+  
+})
+
+//delete an entry
+app.delete('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const person = persons.find(person => id === person.id)
+
+  if(!person) {
+    return res.status(404).end('entry not found')
+  }
+
+  console.log(person)
+  persons = persons.filter(person => id !== person.id)
+  res.json(persons)
+  
+})
+
+//get info
+app.get('/info', (req, res) => {
+ const reqTime = new Date()
+ const entries = persons.length
+
+ res.send(`<p>Phonebook has info for ${entries} people</p><p>${reqTime}</p>`)
+})
+
+const PORT = 3001;
+app.listen(PORT, ()=> {
+  console.log(`server started at port ${PORT}`)
+})
+
 
 
 
