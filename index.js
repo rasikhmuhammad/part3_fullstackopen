@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 
-const persons = [
+let persons = [
     { 
       "id": 1,
       "name": "Arto Hellas", 
@@ -46,16 +46,55 @@ app.get('/api/persons/:id', (req, res) => {
 app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
   const person = persons.find(person => id === person.id)
-
   if(!person) {
     return res.status(404).end('entry not found')
   }
-
-  console.log(person)
   persons = persons.filter(person => id !== person.id)
   res.json(persons)
-  
 })
+
+//create an entry
+app.use(express.json())
+
+isUniqueEntry = (entry) => {
+  const existingPerson = persons.find(
+    person => person.name.toLowerCase() === entry.name.toLowerCase())
+  if(existingPerson) {
+    return false
+  }
+  else {
+    return true
+  }
+}
+
+const generateId = () => {
+  const id = Math.floor(Math.random()*50000);
+  return id;
+}
+
+app.post('/api/persons', (request, response) => {
+  const userEntry = request.body
+  if(!userEntry.name) {
+    return response.status(400).json({
+      error: "name missing"
+    })
+  }
+  if(!userEntry.number) {
+    return response.status(400).json({
+      error: "number missing"
+    })
+  }
+
+  if(isUniqueEntry(userEntry)) {
+    const newPerson = {...userEntry, id: generateId()}
+    persons = persons.concat(newPerson)
+    response.json(persons)
+  }
+  else response.status(400).json({
+    error: "person with name already exists"
+  })
+})
+
 
 //get info
 app.get('/info', (req, res) => {
