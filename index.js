@@ -1,4 +1,5 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 let persons = [
@@ -23,6 +24,17 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
+
+//activate json-parser
+app.use(express.json())
+
+//create custom token to capture POST object in morgan logger 
+morgan.token('person', function getPerson(req) {
+  return JSON.stringify(req.body)
+})
+
+//use morgan logger based on tiny configuration
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person'))
 
 //get all entries
 app.get('/api/persons', (req, res) => {
@@ -54,7 +66,6 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 //create an entry
-app.use(express.json())
 
 isUniqueEntry = (entry) => {
   const existingPerson = persons.find(
