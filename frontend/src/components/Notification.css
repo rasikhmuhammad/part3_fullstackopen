@@ -1,0 +1,13 @@
+.error-message {
+    min-height: 30px;
+    padding: 6px 20px;
+    margin: 20px 0px;
+    max-width: 600px;
+    font-weight: 600;
+    color: green;
+    font-size: 1.25rem;
+    background-color: lightgrey;
+    border: 1px solid lightgrey;
+    border-radius: 2px;
+    box-shadow: 3px 3px 2px darkgrey;
+}

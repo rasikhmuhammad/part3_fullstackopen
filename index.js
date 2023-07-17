@@ -1,5 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
 
 let persons = [
@@ -27,6 +28,9 @@ let persons = [
 
 //activate json-parser
 app.use(express.json())
+
+//allow cross-origin resource sharing
+app.use(cors())
 
 //create custom token to capture POST object in morgan logger 
 morgan.token('person', function getPerson(req) {
@@ -99,7 +103,7 @@ app.post('/api/persons', (request, response) => {
   if(isUniqueEntry(userEntry)) {
     const newPerson = {...userEntry, id: generateId()}
     persons = persons.concat(newPerson)
-    response.json(persons)
+    response.json(newPerson)
   }
   else response.status(400).json({
     error: "person with name already exists"
