@@ -3,7 +3,6 @@ const morgan = require('morgan')
 const cors = require('cors')
 const app = express()
 
-app.use(express.static('build'))
 
 let persons = [
     { 
@@ -33,6 +32,9 @@ app.use(express.json())
 
 //allow cross-origin resource sharing
 app.use(cors())
+
+//serve frontend build to browser statically
+app.use(express.static('build'))
 
 //create custom token to capture POST object in morgan logger 
 morgan.token('person', function getPerson(req) {
