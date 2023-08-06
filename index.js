@@ -1,7 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const app = express()
+const Person = require('./models/people')
 
 
 let persons = [
@@ -46,7 +48,13 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :p
 
 //get all entries
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person.find({})
+      .then(result => {
+        res.json(result)
+      })
+      .catch(error => {
+        console.log('failed to get contacts: ', error.mesage)
+      })
 })
 
 //get any entry
