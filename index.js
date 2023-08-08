@@ -13,7 +13,7 @@ app.use(express.json())
 app.use(cors())
 
 //serve frontend build to browser statically
-// app.use(express.static('build'))
+app.use(express.static('build'))
 
 //create custom token to capture POST object in morgan logger 
 morgan.token('person', function getPerson(req) {
