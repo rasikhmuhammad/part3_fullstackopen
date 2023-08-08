@@ -59,18 +59,15 @@ const App = () => {
       })
   }
 
+  //handler for submitting new entries
   const handleSubmit =(event) => {
-
     event.preventDefault();
-
     let validEntry = true;
     let numberChangeOnly = false;
-
     if(newName === "" || newNumber === "") {
       validEntry = false;
       alert("please enter valid information in all fields to submit");
     }
-    
     for (const person of persons) {
       if(newName.toLowerCase() === person.name.toLowerCase()) {
         if (newNumber === person.number) {
@@ -88,7 +85,6 @@ const App = () => {
         break;
       }
     }
-   
     if(validEntry === true && numberChangeOnly === false) {
       const newPerson = {name: newName, number: newNumber};
       usePersons.create(newPerson)
@@ -98,11 +94,17 @@ const App = () => {
           setNewName('');
           setNewNumber('');
         })
+        .catch(error => {
+          setError(`${error.response.data.error}`)
+          setTimeout( () => {
+            setError('');
+          }, 4000)
+        })
     }
   }
 
+  //event handler for deleting a person from database
   const handleDelete = (id, name) => {
-
     if(window.confirm(`Delete ${name} ?`)) {
       usePersons.remove(id)
       .then(deletedNote => {

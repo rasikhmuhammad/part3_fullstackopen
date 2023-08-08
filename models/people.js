@@ -13,11 +13,28 @@ mongoose.connect(process.env.MONGO_URI)
         console.log('error connecting to databse:', error.message)
     })
 
+//custom validator for number
+function validator(number) {
+    const phoneRegex = /^[0-9]{2,3}-[0-9]{6,}$/;
+    return phoneRegex.test(number)
+}
+
 //create schema for storing a person in phonebook database in the people collection
 const personSchema = new mongoose.Schema({
     id: String,
-    name: String,
-    number: String
+    name: {
+        type: String,
+        minLength: 3,
+        required: true
+    },
+    number: {
+        type: String,
+        required: true,
+        validate: [
+            validator,
+            "is not a valid number"
+        ]
+    }
 })
 
 //exclude _v and _id in database response to frontend
